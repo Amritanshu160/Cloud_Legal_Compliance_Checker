@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Checklist Results</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body class="container mt-5">
+    <h1>Checklist Results</h1>
+
+    {% if incomplete %}
+    <div class="alert alert-warning">
+        <h4 class="alert-heading">Warning: Issues Detected</h4>
+        <p>The following areas need attention before uploading your sensitive data to the cloud:</p>
+        {% set ns = namespace(shown=false) %}
+        {% for category, items in checklist.items() %}
+        {% for item in items %}
+        {% if ns.shown is sameas false and results[item.id] != "yes" %}
+        <h5 class="mt-3">{{ category }}</h5>
+        <!-- <h5 class="mt-3">{{ item, shown}}</h5> -->
+        {% set ns.shown = true %}
+        <!-- <h5 class="mt-3">{{ item, shown}}</h5> -->
+        {% endif %}
+        {% endfor %}
+        <ul>
+            {% for item in items %}
+            {% if results[item.id] != "yes" %}
+            <li>{{ item.question }}</li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+        {% set ns.shown = false %}
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-success">
+        <h4 class="alert-heading">All Clear!</h4>
+        <p>You are legally and ethically prepared to upload sensitive data to the cloud.</p>
+    </div>
+    {% endif %}
+    <a href="/" class="btn btn-secondary mt-3">Go Back</a>
+
+</body>
+
+</html>
